@@ -49,7 +49,7 @@ for (var i = 1; i <= numTracks; i++) {
 var checkAlbumExists = function(needle, haystack) {
   for(l =1; l<= haystack.length; l++) {
     if(haystack[l].album.toString() === needle) {
-      return l;
+      return parseInt(l);
     }
   }
   return -1;
