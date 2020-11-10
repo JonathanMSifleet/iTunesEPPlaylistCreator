@@ -14,10 +14,8 @@ var tracks = mainLibrary.Tracks;
 var numTracks = tracks.Count;
 var albumArray;
 var trackArray; 
-var currTrack;
-var itunesAlbum;
+var curTrack;
 var albumName;
-var albumObject;
 var albumKey;
 var i;
 var j;
@@ -29,23 +27,26 @@ albumArray = new Array();
 for (i = 1; i <= numTracks; i++) {
   if(tracks.Item(i) !== undefined) {
 
-    currTrack = tracks.Item(i);
-    albumName = currTrack.Album.toString();
+    curTrack = tracks.Item(i);
+    albumName = curTrack.Album.toString();
 
     albumKey = -1;
-    albumKey = checkAlbumExists(albumName, albumArray);
+    if(albumArray.Count > 0) {
+      albumKey = checkAlbumExists(albumName, albumArray);
 
-    if(albumKey !== -1) {
-      albumArray[albumKey].numTracks++;
-    } else if(albumKey === -1) {
-      // no album found
-      albumArray.push({album: albumName, numTracks: 1})
+      if(albumKey !== -1) {
+        albumArray[albumKey].numTracks++;
+      } else {
+        // no album found
+        albumArray.push({album: albumName, numTracks: 1});
+      }
+    } else {
+      albumArray.push({album: albumName, numTracks: 1});
     }
-
   }
 }
 
-EPPlaylist = iTunespAp.CreatePlaylist("EPs");
+EPPlaylist = iTunespApp.CreatePlaylist("EPs");
 
 for( k = 1; k <= albumArray.Count; k++) {
   try{
@@ -63,8 +64,8 @@ var addToPlaylist = function (element) {
      trackArray = element.album;
      numTracks = trackArray.Count;
     for( j = 1; j <= numTracks; j++) {
-      currTrack = trackArray[j];
-      EPPlaylist.AddTrack(currTrack);
+      curTrack = trackArray[j];
+      EPPlaylist.AddTrack(curTrack);
     }
   }
   return;
