@@ -1,65 +1,53 @@
-/* 	Rename me to CreateEP.js
-  Double Click in Explorer to run
+/* 
 
-Script based from Otto - http://ottodestruct.com       */
+Double Click in Explorer to run
 
-// put your playlist name here
+Script based on One Hit Wonder by Otto:
+http://ottodestruct.com / https://web.archive.org/web/20190329050207/http://ottodestruct.com/itunes/onehitwonders.txt
+
+*/
+
 var iTunesApp = WScript.CreateObject("iTunes.Application");
 var mainLibrary = iTunesApp.LibraryPlaylist;
 
 var tracks = mainLibrary.Tracks;
 var numTracks = tracks.Count;
-var albumArray = new Array();
-var trackArray = new Array();
+var albumArray;
+var trackArray; 
 var currTrack;
 var itunesAlbum;
 var albumName;
 var albumObject;
-var albumMatch;
+var albumKey;
 var i;
 var j;
 var k;
 var l;
 
-EPPlaylist = iTunesApp.CreatePlaylist("EPs");
+albumArray = new Array();
 
 for (i = 1; i <= numTracks; i++) {
-  currTrack = tracks.Item(i);
-  itunesAlbum = currTrack.Album;
+  if(tracks.Item(i) !== undefined) {
 
-  // if album is valid then:
-  if ((itunesAlbum != undefined) && (itunesAlbum != "")) {
-    // if album doesn't already exist in array create new album:
+    currTrack = tracks.Item(i);
+    albumName = currTrack.Album.toString();
 
-     albumName = itunesAlbum.toString();
-     albumObject = {album: itunesAlbum, numTracks: 1};
-     albumMatch = false;
+    albumKey = -1;
+    albumKey = checkAlbumExists(albumName, albumArray);
 
-    for (i = 1; i <= albumArray.length; i++) {
-      if(albumArray[i] !== undefined) {
-        if(albumArray[i].album === albumObject.album) {
-          albumMatch = true;
-        }
-      }
+    if(albumKey !== -1) {
+      albumArray[albumKey].numTracks++;
+    } else if(albumKey === -1) {
+      // no album found
+      albumArray.push({album: albumName, numTracks: 1})
     }
 
-    if(albumMatch === true) {
-      WScript.Echo("Matching album" + albumObject.album + albumObject.numTracks);
-      for( l = 1; l <= albumArray.length; l++) {
-        if(albumArray[l] !== undefined) {
-          if(albumArray[l].album === albumObject) {
-            albumArray[l].numTracks = albumArray[l].numTracks + 1;
-          }
-        }
-      }
-    } else {
-      WScript.Echo("New album" + albumObject.album + albumObject.numTracks);
-      albumArray.push(albumObject);
-    }
   }
 }
 
-for( k = 1; k <=  albumArray.length; k++) {
+EPPlaylist = iTunespAp.CreatePlaylist("EPs");
+
+for( k = 1; k <= albumArray.Count; k++) {
   try{
     if(albumArray[k] != undefined) {
       addToPlaylist(albumArray[k]);
@@ -71,12 +59,22 @@ for( k = 1; k <=  albumArray.length; k++) {
 
 var addToPlaylist = function (element) {
  if(element.numTracks > 7) {
+     trackArray = new Array();
      trackArray = element.album;
-     numTracks = trackArray.length;
+     numTracks = trackArray.Count;
     for( j = 1; j <= numTracks; j++) {
       currTrack = trackArray[j];
       EPPlaylist.AddTrack(currTrack);
     }
   }
   return;
+}
+
+var checkAlbumExists = function(needle, haystack) {
+  for(j =1; j<= haystack.Count; j++) {
+    if(haystack[j].album.toString() === needle) {
+      return j;
+    }
+  }
+  return -1;
 }
