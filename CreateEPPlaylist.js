@@ -29,7 +29,7 @@ for (var i = 1; i <= numTracks; i++) {
     if(albumArray.length > 0) {
       albumKey = checkAlbumExists(albumName, albumArray);
 
-      if(albumKey !== undefined || albumKey !== -1) {
+      if(albumKey === undefined || albumKey === -1) {
         // no album found
         albumArray.push({album: albumName, numTracks: 1});
       } else {
@@ -41,7 +41,6 @@ for (var i = 1; i <= numTracks; i++) {
   }
 }
 
-
 var checkAlbumExists = function(needle, haystack) {
   for(l =1; l<= haystack.length; l++) {
     if(haystack[l].album.toString() === needle) {
@@ -50,7 +49,6 @@ var checkAlbumExists = function(needle, haystack) {
   }
   return -1;
 }
-
 
 EPPlaylist = iTunesApp.CreatePlaylist("EPs");
 
