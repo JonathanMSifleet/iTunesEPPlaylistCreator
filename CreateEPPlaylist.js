@@ -46,7 +46,7 @@ for (i = 1; i <= numTracks; i++) {
   }
 }
 
-EPPlaylist = iTunespApp.CreatePlaylist("EPs");
+EPPlaylist = iTunesApp.CreatePlaylist("EPs");
 
 for( k = 1; k <= albumArray.Count; k++) {
   try{
