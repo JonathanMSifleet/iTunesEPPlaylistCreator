@@ -11,34 +11,33 @@ var iTunesApp = WScript.CreateObject("iTunes.Application");
 var mainLibrary = iTunesApp.LibraryPlaylist;
 
 var tracks = mainLibrary.Tracks;
-var numTracks = tracks.Count;
+// var numTracks = tracks.Count;
+// limit to 100 for testing
+var numTracks = 100;
 var albumArray;
 var trackArray; 
-var curTrack;
-var albumName;
-var albumKey;
-var i;
-var j;
-var k;
+var l;
 var l;
 
 albumArray = new Array();
 
-for (i = 1; i <= numTracks; i++) {
+for (var i = 1; i <= numTracks; i++) {
+  // skip track if undefined:
   if(tracks.Item(i) !== undefined) {
 
-    curTrack = tracks.Item(i);
-    albumName = curTrack.Album.toString();
+    // get album title from track
+    var curTrack = tracks.Item(i);
+    var albumName = curTrack.Album.toString();
 
-    albumKey = -1;
-    if(albumArray.Count > 0) {
+    var albumKey = -1;
+    if(albumArray.length > 0) {
       albumKey = checkAlbumExists(albumName, albumArray);
 
-      if(albumKey !== -1) {
-        albumArray[albumKey].numTracks++;
-      } else {
+      if(albumKey !== undefined || albumKey !== -1) {
         // no album found
         albumArray.push({album: albumName, numTracks: 1});
+      } else {
+        albumArray[albumKey].numTracks++;
       }
     } else {
       albumArray.push({album: albumName, numTracks: 1});
@@ -46,9 +45,20 @@ for (i = 1; i <= numTracks; i++) {
   }
 }
 
+
+var checkAlbumExists = function(needle, haystack) {
+  for(l =1; l<= haystack.length; l++) {
+    if(haystack[l].album.toString() === needle) {
+      return l;
+    }
+  }
+  return -1;
+}
+
+
 EPPlaylist = iTunesApp.CreatePlaylist("EPs");
 
-for( k = 1; k <= albumArray.Count; k++) {
+for( var k = 1; k <= albumArray.length; k++) {
   try{
     if(albumArray[k] != undefined) {
       addToPlaylist(albumArray[k]);
@@ -62,20 +72,11 @@ var addToPlaylist = function (element) {
  if(element.numTracks > 7) {
      trackArray = new Array();
      trackArray = element.album;
-     numTracks = trackArray.Count;
-    for( j = 1; j <= numTracks; j++) {
-      curTrack = trackArray[j];
+     numTracks = trackArray.length;
+    for( l = 1; l <= numTracks; l++) {
+      curTrack = trackArray[l];
       EPPlaylist.AddTrack(curTrack);
     }
   }
   return;
-}
-
-var checkAlbumExists = function(needle, haystack) {
-  for(j =1; j<= haystack.Count; j++) {
-    if(haystack[j].album.toString() === needle) {
-      return j;
-    }
-  }
-  return -1;
 }
