@@ -14,12 +14,8 @@ var tracks = mainLibrary.Tracks;
 // var numTracks = tracks.Count;
 // limit to 100 for testing
 var numTracks = 100;
-var albumArray;
-var trackArray; 
-var l;
-var l;
 
-albumArray = new Array();
+var albumArray = new Array();
 
 for (var i = 1; i <= numTracks; i++) {
   // skip track if undefined:
@@ -70,10 +66,10 @@ for( var k = 1; k <= albumArray.length; k++) {
 
 var addToPlaylist = function (element) {
  if(element.numTracks > 7) {
-     trackArray = new Array();
-     trackArray = element.album;
-     numTracks = trackArray.length;
-    for( l = 1; l <= numTracks; l++) {
+    var trackArray = new Array();
+    trackArray = element.album;
+    numTracks = trackArray.length;
+    for(var l = 1; l <= numTracks; l++) {
       curTrack = trackArray[l];
       EPPlaylist.AddTrack(curTrack);
     }
